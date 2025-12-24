@@ -147,8 +147,7 @@
 .todo-operating-ui {
   width: 100%;
   height: auto;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible;
   max-height: 82%;
 }
 
@@ -166,7 +165,7 @@
 }
 
 .todo {
-  width: 610px;
+  width: 100%;
   height: auto;
   background-color: white;
   border-radius: 16px;
@@ -369,7 +368,7 @@
 .todo-setting-ui {
   display: flex;
   height: 13%;
-  width: 86%;
+  width: 100%;
   margin: 0 auto;
   margin-top: 5%;
 }
