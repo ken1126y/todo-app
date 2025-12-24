@@ -6,17 +6,35 @@ import { v4 as uuidv4 } from 'uuid';
 
 const TodoOperatingUI = ({ filteredDisplayDate, setEditVisible, setSaveIndex, isSortFormVisible, isFormVisible }) => {
     const [isOverflowMenuVisible, setOverflowMenuVisible] = useState(filteredDisplayDate.map(() => false));
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [menuIndex, setMenuIndex] = useState(null);
 
-    function handleOptionButtonClick(index) {
+    function handleOptionButtonClick(index, event) {
+        const rect = event.currentTarget.getBoundingClientRect();
+        // toggle
+        if (menuIndex === index) {
+            setMenuIndex(null);
+            setMenuAnchor(null);
+            setOverflowMenuVisible((prev) => {
+                const newOverflowMenuVisible = [...prev];
+                newOverflowMenuVisible[index] = false;
+                return newOverflowMenuVisible;
+            });
+            return;
+        }
+        setMenuIndex(index);
+        setMenuAnchor(rect);
         setOverflowMenuVisible((prev) => {
             const newOverflowMenuVisible = [...prev];
-            newOverflowMenuVisible[index] = !newOverflowMenuVisible[index];
+            newOverflowMenuVisible[index] = true;
             return newOverflowMenuVisible;
         });
     }
 
     const handleDelete = (index) => {
         localStorage.removeItem(filteredDisplayDate[index].key);
+        setMenuIndex(null);
+        setMenuAnchor(null);
         setOverflowMenuVisible((prev) => {
             const newOverflowMenuVisible = [...prev];
             newOverflowMenuVisible[index] = false;
@@ -28,6 +46,8 @@ const TodoOperatingUI = ({ filteredDisplayDate, setEditVisible, setSaveIndex, is
         const newKey = `task-${uuidv4()}`
         const copyTask = { ...filteredDisplayDate[index], key: newKey };
         localStorage.setItem(newKey, JSON.stringify(copyTask));
+        setMenuIndex(null);
+        setMenuAnchor(null);
         setOverflowMenuVisible((prev) => {
             const newOverflowMenuVisible = [...prev];
             newOverflowMenuVisible[index] = false;
@@ -38,6 +58,8 @@ const TodoOperatingUI = ({ filteredDisplayDate, setEditVisible, setSaveIndex, is
     const handleEdit = (index) => {
         setEditVisible(true);
         setSaveIndex(index);
+        setMenuIndex(null);
+        setMenuAnchor(null);
         setOverflowMenuVisible((prev) => {
             const newOverflowMenuVisible = [...prev];
             newOverflowMenuVisible[index] = false;
@@ -82,7 +104,7 @@ const TodoOperatingUI = ({ filteredDisplayDate, setEditVisible, setSaveIndex, is
                                     </div>
                                 </div>
                                 <div className="todo-date_right_box">
-                                    <OptionButton handleOptionButtonClick={() => handleOptionButtonClick(key)} />
+                                    <OptionButton handleOptionButtonClick={(e) => handleOptionButtonClick(key, e)} />
 
                                     {display.type === 'private' && (
                                         <div className="todo-types-copy private-copy">
@@ -108,7 +130,7 @@ const TodoOperatingUI = ({ filteredDisplayDate, setEditVisible, setSaveIndex, is
                                             <p>その他</p>
                                         </div>
                                     )}
-                                    {isOverflowMenuVisible[key] && <OverflowMenu handleDelete={() => handleDelete(key)}
+                                    {isOverflowMenuVisible[key] && <OverflowMenu anchorRect={menuAnchor} onClose={() => { setMenuIndex(null); setMenuAnchor(null); setOverflowMenuVisible(filteredDisplayDate.map(() => false)); }} handleDelete={() => handleDelete(key)}
                                         handleRecording={() => handleRecording(key)} handleEdit={() => handleEdit(key)} />}
                                 </div>
                             </li>
