@@ -19,7 +19,7 @@ const OverflowMenu = ({ anchorRect, onClose, handleDelete, handleRecording, hand
     if (!anchorRect) return null;
 
     const top = anchorRect.top + window.scrollY;
-    const left = anchorRect.right + window.scrollX + 8; // small offset to the right
+    const left = anchorRect.right + window.scrollX + 8;
 
     const menu = (
         <ul

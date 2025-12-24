@@ -11,7 +11,7 @@ const TodoOperatingUI = ({ filteredDisplayDate, setEditVisible, setSaveIndex, is
 
     function handleOptionButtonClick(index, event) {
         const rect = event.currentTarget.getBoundingClientRect();
-        // toggle
+
         if (menuIndex === index) {
             setMenuIndex(null);
             setMenuAnchor(null);
